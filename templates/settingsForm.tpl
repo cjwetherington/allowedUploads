@@ -23,6 +23,7 @@
 
 	{fbvFormArea id="allowedUploadsSettingsFormArea"}
 		{fbvElement type="text" id="allowedExtensions" name="allowedExtensions" value=$allowedExtensions label="plugins.generic.allowedUploads.manager.settings.allowedExtensions"}
+		{fbvElement type="checkbox" id="validateMimeType" name="validateMimeType" checked=$validateMimeType label="plugins.generic.allowedUploads.manager.settings.validateMimeType"}
 	{/fbvFormArea}
 
 	{fbvFormButtons}

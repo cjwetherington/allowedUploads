@@ -25,3 +25,12 @@ msgstr "Add a semicolon separated list of allowed file extensions. For example d
 
 msgid "plugins.generic.allowedUploads.manager.settings.allowedExtensions"
 msgstr "Allowed file extensions"
+
+msgid "plugins.generic.allowedUploads.manager.settings.validateMimeType"
+msgstr "Enable MIME type validation for enhanced security"
+
+msgid "plugins.generic.allowedUploads.error.multiExtension"
+msgstr "Files with multiple extensions are not permitted unless specified in the list of allowed extensions: {$fileName}."
+
+msgid "plugins.generic.allowedUploads.error.mimeType"
+msgstr "File type mismatch detected: {$fileName} is of unexpected MIME type {$detectedType} and may pose a security concern."

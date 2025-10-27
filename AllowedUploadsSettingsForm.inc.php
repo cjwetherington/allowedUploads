@@ -45,6 +45,7 @@ class AllowedUploadsSettingsForm extends Form {
 	function initData() {
 		$this->_data = array(
 			'allowedExtensions' => $this->_plugin->getSetting($this->_contextId, 'allowedExtensions'),
+			'validateMimeType' => $this->_plugin->getSetting($this->_contextId, 'validateMimeType'),
 		);
 	}
 
@@ -52,7 +53,7 @@ class AllowedUploadsSettingsForm extends Form {
 	 * Assign form data to user-submitted data.
 	 */
 	function readInputData() {
-		$this->readUserVars(array('allowedExtensions'));
+		$this->readUserVars(array('allowedExtensions', 'validateMimeType'));
 	}
 
 	/**
@@ -70,6 +71,7 @@ class AllowedUploadsSettingsForm extends Form {
 	 */
 	function execute(...$functionArgs) {
 		$this->_plugin->updateSetting($this->_contextId, 'allowedExtensions', $this->getData('allowedExtensions'), 'string');
+		$this->_plugin->updateSetting($this->_contextId, 'validateMimeType', $this->getData('validateMimeType'), 'bool');
 		parent::execute(...$functionArgs);
 	}
 
