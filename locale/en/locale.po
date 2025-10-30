@@ -33,4 +33,7 @@ msgid "plugins.generic.allowedUploads.error.multiExtension"
 msgstr "Files with multiple extensions are not permitted unless specified in the list of allowed extensions: {$fileName}."
 
 msgid "plugins.generic.allowedUploads.error.mimeType"
-msgstr "File type mismatch detected: {$fileName} is of unexpected MIME type {$detectedType} and may pose a security concern."
+msgstr "File type mismatch detected: '{$fileName}' is of unexpected MIME type '{$detectedType}' and may pose a security risk."
+
+msgid "plugins.generic.allowedUploads.settings.mimeValidation.unavailable"
+msgstr "MIME type validation cannot be enabled. This server's MIME detection is not functioning correctly. Please check your PHP configuration and the mime_database_path setting in config.inc.php."

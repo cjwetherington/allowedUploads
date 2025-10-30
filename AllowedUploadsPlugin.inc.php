@@ -227,8 +227,8 @@ class AllowedUploadsPlugin extends GenericPlugin {
      * @return array Array with 'valid' boolean and 'error' message
      */
     private function validateFileType($fileName, $filePath, $allowedExtensions, $contextId) {
-        $parts = explode('.', $fileName);
-        $allowedExtensionsArray = array_filter(array_map('trim', explode(';', $allowedExtensions)), 'strlen');
+		$parts = explode('.', $fileName);
+		$allowedExtensionsArray = array_filter(array_map('trim', explode(';', $allowedExtensions)), 'strlen');
 
         // Check for multiple extensions
         if (count($parts) > 2) {
@@ -284,7 +284,11 @@ class AllowedUploadsPlugin extends GenericPlugin {
     }
 
 	/**
-	 * Check the uploaded file in wizard
+	 * Check the uploaded file in the submission wizard
+	 * Hook: SubmissionFile::validate
+	 * @param string $hookName Name of hook being called
+	 * @param array $params Hook parameters: errors array, submission, props, actions, locale
+	 * @return bool Always returns false to allow other hooks to process
 	 */
     function checkUploadWizard($hookName, $params) {
         $props = $params[2];
@@ -295,26 +299,31 @@ class AllowedUploadsPlugin extends GenericPlugin {
             $request = Application::get()->getRequest();
             $context = $request->getContext();
             $contextId = $context->getId();
-            
+
             $allowedExtensions = $this->getSetting($contextId, 'allowedExtensions');
 
             if ($allowedExtensions){
-                // Try to get the file path if available
-                $filePath = null;
-                if (isset($props['uploadedFile']) && $props['uploadedFile']) {
-                    $filePath = $props['uploadedFile']->getFilePath();
-                }
-                
+				// Get the uploaded file path from $_FILES
+				$filePath = null;
+				if (isset($_FILES['file']) && isset($_FILES['file']['tmp_name'])) {
+					$filePath = $_FILES['file']['tmp_name'];
+				}
+
                 $validation = $this->validateFileType($fileName, $filePath, $allowedExtensions, $contextId);
                 if (!$validation['valid']) {
                     $errors[] = $validation['error'];
                 }
             }
         }
+		return false;
     }
 
 	/**
-	 * Check the uploaded file
+	 * Check the uploaded file in the upload form
+	 * Hook: submissionfilesuploadform::validate
+	 * @param string $hookName Name of hook being called
+	 * @param array $params Hook parameters: form object
+	 * @return bool Always returns fale to allow other hooks to process
 	 */
     function checkUpload($hookName, $params) {
         $form = $params[0];
@@ -322,20 +331,19 @@ class AllowedUploadsPlugin extends GenericPlugin {
         $context = $request->getContext();
         $contextId = $context->getId();
         $userVars = $request->getUserVars();
-        $fileName = $userVars['name'];
+        $fileName = $userVars['name'] ?? null;
+		if (!$fileName) {
+			return false;
+		}
 
         $allowedExtensions = $this->getSetting($contextId, 'allowedExtensions');
 
         if ($allowedExtensions){
-            // Try to get the uploaded file path
-            $filePath = null;
-            $uploadedFiles = $request->getUploadedFiles();
-            if (!empty($uploadedFiles)) {
-                $uploadedFile = reset($uploadedFiles); // Get first uploaded file
-                if ($uploadedFile && is_array($uploadedFile)) {
-                    $filePath = $uploadedFile['tmp_name'] ?? null;
-                }
-            }
+			// Get the uploaded file path from $_FILES
+			$filePath = null;
+			if (isset($_FILES['file']) && isset($_FILES['file']['tmp_name'])) {
+				$filePath = $_FILES['file']['tmp_name'];
+			}
 
             $validation = $this->validateFileType($fileName, $filePath, $allowedExtensions, $contextId);
             if (!$validation['valid']) {
@@ -344,7 +352,6 @@ class AllowedUploadsPlugin extends GenericPlugin {
         }
         return false;
     }
-
 
 }
 ?>

@@ -70,9 +70,49 @@ class AllowedUploadsSettingsForm extends Form {
 	 * Save settings.
 	 */
 	function execute(...$functionArgs) {
+		// Check if MIME validation is being enabled
+		$validateMimeType = $this->getData('validateMimeType');
+		
+		if ($validateMimeType && !$this->testMimeDetection()) {
+			// MIME detection isn't working - add an error
+			$this->addError('validateMimeType', __('plugins.generic.allowedUploads.settings.mimeValidation.unavailable'));
+			return false;
+    	}
+
 		$this->_plugin->updateSetting($this->_contextId, 'allowedExtensions', $this->getData('allowedExtensions'), 'string');
 		$this->_plugin->updateSetting($this->_contextId, 'validateMimeType', $this->getData('validateMimeType'), 'bool');
-		parent::execute(...$functionArgs);
+		return parent::execute(...$functionArgs);
+	}
+
+	/**
+	 * Test if MIME type detection is working
+	 * @return bool True if MIME detection works
+	 */
+	private function testMimeDetection() {
+		// Test with this PHP file - we know it exists and is readable
+		$testFile = __FILE__;
+
+		// Test finfo_open (primary method)
+		if (function_exists('finfo_open')) {
+			$finfo = @finfo_open(FILEINFO_MIME_TYPE);
+			if ($finfo !== false) {
+				$mime = @finfo_file($finfo, $testFile);
+				@finfo_close($finfo);
+				if ($mime !== false) {
+					return true;
+				}
+			}
+		}
+
+		// Test fallback method if primary failed
+		if (function_exists('mime_content_type')) {
+			$mime = @mime_content_type($testFile);
+			if ($mime !== false) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }
