@@ -112,6 +112,7 @@ class AllowedUploadsPlugin extends GenericPlugin {
 	 */
     private function getMimeTypeFromFile($filePath) {
         if (!file_exists($filePath)) {
+			error_log("AllowedUploads: File not found for MIME detection: " . $filePath);
             return false;
         }
 
@@ -121,15 +122,25 @@ class AllowedUploadsPlugin extends GenericPlugin {
             if ($finfo) {
                 $mimeType = finfo_file($finfo, $filePath);
                 finfo_close($finfo);
-                return $mimeType;
-            }
-        }
+				if ($mimeType !== false) {
+                	return $mimeType;
+				}
+				error_log("AllowedUploads: finfo_file failed for: " . $filePath);
+        	} else {
+				error_log("AllowedUploads: finfo_open failed");
+			}
+		}
 
         // Fallback to mime_content_type as failsafe
         if (function_exists('mime_content_type')) {
-            return mime_content_type($filePath);
+			$mimeType = mime_content_type($filePath);
+            if ($mimeType !== false) {
+				return $mimeType;
+			}
+			error_log("AllowedUploads: mime_content_type failed for: " . $filePath);
         }
 
+		error_log("AllowedUploads: All MIME detection methods failed for: " . $filePath);
         return false;
     }
 
@@ -204,9 +215,9 @@ class AllowedUploadsPlugin extends GenericPlugin {
 			'r' => ['text/plain'],
 
 			// Statistical formats
-			'sav' => ['application/x-spss-sav'],
 			'dta' => ['application/x-stata-dta'],
 			'sas7bdat' => ['application/x-sas-data'],
+			'sav' => ['application/x-spss-sav'],
 
 			// Audio/Video
 			'avi' => ['video/x-msvideo'],
@@ -227,8 +238,20 @@ class AllowedUploadsPlugin extends GenericPlugin {
      * @return array Array with 'valid' boolean and 'error' message
      */
     private function validateFileType($fileName, $filePath, $allowedExtensions, $contextId) {
+		$request = Application::get()->getRequest();
+		$user = $request->getUser();
+		$userId = $user ? $user->getId() : 'anonymous';
+
 		$parts = explode('.', $fileName);
 		$allowedExtensionsArray = array_filter(array_map('trim', explode(';', $allowedExtensions)), 'strlen');
+
+		// Check for extensionless files
+		if (count($parts) < 2) {
+			return [
+				'valid' => false,
+				'error' => __('plugins.generic.allowedUploads.error.noExtension', ['fileName' => $fileName])
+			];
+		}
 
         // Check for multiple extensions
         if (count($parts) > 2) {
@@ -264,13 +287,15 @@ class AllowedUploadsPlugin extends GenericPlugin {
         // Perform MIME type validation
         $detectedMimeType = $this->getMimeTypeFromFile($filePath);
         if ($detectedMimeType === false) {
-            error_log("AllowedUploads: Could not detect MIME type for file " . $fileName);
+            error_log("AllowedUploads: Could not determine MIME type of file " . $fileName);
             return ['valid' => true, 'error' => null];
         }
 
         $expectedMimeTypes = $this->getExpectedMimeTypes($extension);
         if (!empty($expectedMimeTypes) && !in_array($detectedMimeType, $expectedMimeTypes)) {
-            return [
+            error_log("AllowedUploads: SECURITY - MIME type mismatch for user {$userId} in context {$contextId}: {$fileName} " .
+                	  "(detected: {$detectedMimeType}, expected: " . implode(', ', $expectedMimeTypes) . ")");
+			return [
                 'valid' => false,
                 'error' => __('plugins.generic.allowedUploads.error.mimeType', [
                     'fileName' => $fileName,
@@ -315,6 +340,7 @@ class AllowedUploadsPlugin extends GenericPlugin {
                 }
             }
         }
+
 		return false;
     }
 
