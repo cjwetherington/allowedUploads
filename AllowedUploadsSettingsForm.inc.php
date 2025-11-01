@@ -34,8 +34,8 @@ class AllowedUploadsSettingsForm extends Form {
 
 		parent::__construct($plugin->getTemplateResource('settingsForm.tpl'));
 
-        $this->addCheck(new \PKP\form\validation\FormValidatorPost($this));
-        $this->addCheck(new \PKP\form\validation\FormValidatorCSRF($this));
+		$this->addCheck(new \PKP\form\validation\FormValidatorPost($this));
+		$this->addCheck(new \PKP\form\validation\FormValidatorCSRF($this));
 
 	}
 
@@ -81,7 +81,7 @@ class AllowedUploadsSettingsForm extends Form {
 			// Also force the validateMimeType setting back to false so the form shows correctly
 			$this->setData('validateMimeType', false);
 			return false;
-    	}
+		}
 
 		$this->_plugin->updateSetting($this->_contextId, 'allowedExtensions', $this->getData('allowedExtensions'), 'string');
 		$this->_plugin->updateSetting($this->_contextId, 'validateMimeType', $this->getData('validateMimeType'), 'bool');

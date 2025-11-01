@@ -39,7 +39,7 @@
 							<p>{$error}</p>
 					{/foreach}
 			</div>
-    {/if}
+	{/if}
 	{/fbvFormArea}
 
 	{fbvFormButtons}

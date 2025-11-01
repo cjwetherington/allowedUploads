@@ -110,50 +110,50 @@ class AllowedUploadsPlugin extends GenericPlugin {
 
 	/**
 	 * Get MIME type from file content
-     * @param string $filePath Path to the file
-     * @return string|false MIME type or false if detection fails
+	 * @param string $filePath Path to the file
+	 * @return string|false MIME type or false if detection fails
 	 */
-    private function getMimeTypeFromFile($filePath) {
-        if (!file_exists($filePath)) {
+	private function getMimeTypeFromFile($filePath) {
+		if (!file_exists($filePath)) {
 			error_log("AllowedUploads: File not found for MIME detection: " . $filePath);
-            return false;
-        }
+			return false;
+		}
 
-        // Use finfo if available
-        if (function_exists('finfo_open')) {
-            $finfo = finfo_open(FILEINFO_MIME_TYPE);
-            if ($finfo) {
-                $mimeType = finfo_file($finfo, $filePath);
-                finfo_close($finfo);
+		// Use finfo if available
+		if (function_exists('finfo_open')) {
+			$finfo = finfo_open(FILEINFO_MIME_TYPE);
+			if ($finfo) {
+				$mimeType = finfo_file($finfo, $filePath);
+				finfo_close($finfo);
 				if ($mimeType !== false) {
-                	return $mimeType;
+					return $mimeType;
 				}
 				error_log("AllowedUploads: finfo_file failed for: " . $filePath);
-        	} else {
+			} else {
 				error_log("AllowedUploads: finfo_open failed");
 			}
 		}
 
-        // Fallback to mime_content_type as failsafe
-        if (function_exists('mime_content_type')) {
+		// Fallback to mime_content_type as failsafe
+		if (function_exists('mime_content_type')) {
 			$mimeType = mime_content_type($filePath);
-            if ($mimeType !== false) {
+			if ($mimeType !== false) {
 				return $mimeType;
 			}
 			error_log("AllowedUploads: mime_content_type failed for: " . $filePath);
-        }
+		}
 
 		error_log("AllowedUploads: All MIME detection methods failed for: " . $filePath);
-        return false;
-    }
+		return false;
+	}
 
-    /**
-     * Get expected MIME types for file extension
-     * @param string $extension File extension
-     * @return array Array of acceptable MIME types
-     */
-    private function getExpectedMimeTypes($extension) {
-        $mimeMap = [
+	/**
+	 * Get expected MIME types for file extension
+	 * @param string $extension File extension
+	 * @return array Array of acceptable MIME types
+	 */
+	private function getExpectedMimeTypes($extension) {
+		$mimeMap = [
 			// Document formats
 			'doc' => ['application/msword'],
 			'docx' => ['application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
@@ -227,19 +227,19 @@ class AllowedUploadsPlugin extends GenericPlugin {
 			'mp3' => ['audio/mpeg'],
 			'mp4' => ['video/mp4'],
 			'wav' => ['audio/wav'],
-        ];
+		];
 
-        return $mimeMap[strtolower($extension)] ?? [];
-    }
+		return $mimeMap[strtolower($extension)] ?? [];
+	}
 
-    /**
-     * Validate file extension and optionally MIME type
-     * @param string $fileName Original filename
-     * @param string|null $filePath Path to uploaded file
-     * @param string $allowedExtensions Semicolon-separated list of allowed extensions
-     * @param int $contextId Context ID
-     * @return array Array with 'valid' boolean and 'error' message
-     */
+	/**
+	 * Validate file extension and optionally MIME type
+	 * @param string $fileName Original filename
+	 * @param string|null $filePath Path to uploaded file
+	 * @param string $allowedExtensions Semicolon-separated list of allowed extensions
+	 * @param int $contextId Context ID
+	 * @return array Array with 'valid' boolean and 'error' message
+	 */
     private function validateFileType($fileName, $filePath, $allowedExtensions, $contextId) {
 		$request = Application::get()->getRequest();
 		$user = $request->getUser();
@@ -265,65 +265,65 @@ class AllowedUploadsPlugin extends GenericPlugin {
 			];
 		}
 
-        // Check for multiple extensions
-        if (count($parts) > 2) {
-            // Check if a double extension is explicitly allowed
-            $doubleExtension = strtolower($parts[count($parts)-2] . '.' . $parts[count($parts)-1]);
+		// Check for multiple extensions
+		if (count($parts) > 2) {
+			// Check if a double extension is explicitly allowed
+			$doubleExtension = strtolower($parts[count($parts)-2] . '.' . $parts[count($parts)-1]);
 
-            if (in_array($doubleExtension, $allowedExtensionsArray)) {
-                $extension = $doubleExtension; // Use the double extension for MIME type checking
-            } else {
-                return [
-                    'valid' => false,
-                    'error' => __('plugins.generic.allowedUploads.error.multiExtension', ['fileName' => $fileName])
-                ];
-            }
-        } else {
-            $extension = strtolower(end($parts));
-        }
+			if (in_array($doubleExtension, $allowedExtensionsArray)) {
+				$extension = $doubleExtension; // Use the double extension for MIME type checking
+			} else {
+				return [
+					'valid' => false,
+					'error' => __('plugins.generic.allowedUploads.error.multiExtension', ['fileName' => $fileName])
+				];
+			}
+		} else {
+			$extension = strtolower(end($parts));
+		}
 
-        // Check extension against allowlist
-        if (!in_array($extension, $allowedExtensionsArray)) {
-            return [
-                'valid' => false,
-                'error' => __('plugins.generic.allowedUploads.error', ['allowedExtensions' => $allowedExtensions])
-            ];
-        }
+		// Check extension against allowlist
+		if (!in_array($extension, $allowedExtensionsArray)) {
+			return [
+				'valid' => false,
+				'error' => __('plugins.generic.allowedUploads.error', ['allowedExtensions' => $allowedExtensions])
+			];
+		}
 
-        // Check if MIME type validation is enabled and we have a file to check
-        $validateMimeType = $this->getSetting($contextId, 'validateMimeType');
-        if (!$validateMimeType || !$filePath || !file_exists($filePath)) {
-            return ['valid' => true, 'error' => null];
-        }
+		// Check if MIME type validation is enabled and we have a file to check
+		$validateMimeType = $this->getSetting($contextId, 'validateMimeType');
+		if (!$validateMimeType || !$filePath || !file_exists($filePath)) {
+			return ['valid' => true, 'error' => null];
+		}
 
-        // Perform MIME type validation
-        $detectedMimeType = $this->getMimeTypeFromFile($filePath);
-        if ($detectedMimeType === false) {
-            error_log("AllowedUploads: Could not determine MIME type of file " . $fileName);
-            return ['valid' => true, 'error' => null];
-        }
+		// Perform MIME type validation
+		$detectedMimeType = $this->getMimeTypeFromFile($filePath);
+		if ($detectedMimeType === false) {
+			error_log("AllowedUploads: Could not determine MIME type of file " . $fileName);
+			return ['valid' => true, 'error' => null];
+		}
 
 		// Allow empty MIME types to pass (handled separately above)
 		if ($detectedMimeType === 'application/x-empty' || $detectedMimeType === 'inode/x-empty') {
 			return ['valid' => true, 'error' => null];
 		}
 
-        $expectedMimeTypes = $this->getExpectedMimeTypes($extension);
-        if (!empty($expectedMimeTypes) && !in_array($detectedMimeType, $expectedMimeTypes)) {
-            error_log("AllowedUploads: SECURITY - MIME type mismatch for user {$userId} in context {$contextId}: {$fileName} " .
-                	  "(detected: {$detectedMimeType}, expected: " . implode(', ', $expectedMimeTypes) . ")");
+		$expectedMimeTypes = $this->getExpectedMimeTypes($extension);
+		if (!empty($expectedMimeTypes) && !in_array($detectedMimeType, $expectedMimeTypes)) {
+			error_log("AllowedUploads: SECURITY - MIME type mismatch for user {$userId} in context {$contextId}: {$fileName} " .
+						"(detected: {$detectedMimeType}, expected: " . implode(', ', $expectedMimeTypes) . ")");
 			return [
-                'valid' => false,
-                'error' => __('plugins.generic.allowedUploads.error.mimeType', [
-                    'fileName' => $fileName,
-                    'detectedType' => $detectedMimeType,
-                    'allowedExtensions' => $allowedExtensions
-                ])
-            ];
-        }
+				'valid' => false,
+				'error' => __('plugins.generic.allowedUploads.error.mimeType', [
+					'fileName' => $fileName,
+					'detectedType' => $detectedMimeType,
+					'allowedExtensions' => $allowedExtensions
+				])
+			];
+		}
 
-        return ['valid' => true, 'error' => null];
-    }
+		return ['valid' => true, 'error' => null];
+	}
 
 	/**
 	 * Check the uploaded file in the submission wizard
@@ -332,34 +332,34 @@ class AllowedUploadsPlugin extends GenericPlugin {
 	 * @param array $params Hook parameters: errors array, submission, props, actions, locale
 	 * @return bool Always returns false to allow other hooks to process
 	 */
-    function checkUploadWizard($hookName, $params) {
-        $props = $params[2];
-        $locale = $params[4];
+	function checkUploadWizard($hookName, $params) {
+		$props = $params[2];
+		$locale = $params[4];
 
-        if ($fileName = $props['name'][$locale]){
-            $errors =& $params[0];
-            $request = Application::get()->getRequest();
-            $context = $request->getContext();
-            $contextId = $context->getId();
+		if ($fileName = $props['name'][$locale]){
+			$errors =& $params[0];
+			$request = Application::get()->getRequest();
+			$context = $request->getContext();
+			$contextId = $context->getId();
 
-            $allowedExtensions = $this->getSetting($contextId, 'allowedExtensions');
+			$allowedExtensions = $this->getSetting($contextId, 'allowedExtensions');
 
-            if ($allowedExtensions){
+			if ($allowedExtensions){
 				// Get the uploaded file path from $_FILES
 				$filePath = null;
 				if (isset($_FILES['file']) && isset($_FILES['file']['tmp_name'])) {
 					$filePath = $_FILES['file']['tmp_name'];
 				}
 
-                $validation = $this->validateFileType($fileName, $filePath, $allowedExtensions, $contextId);
-                if (!$validation['valid']) {
-                    $errors[] = $validation['error'];
-                }
-            }
-        }
+				$validation = $this->validateFileType($fileName, $filePath, $allowedExtensions, $contextId);
+				if (!$validation['valid']) {
+					$errors[] = $validation['error'];
+				}
+			}
+		}
 
 		return false;
-    }
+	}
 
 	/**
 	 * Check the uploaded file in the upload form
@@ -368,33 +368,33 @@ class AllowedUploadsPlugin extends GenericPlugin {
 	 * @param array $params Hook parameters: form object
 	 * @return bool Always returns fale to allow other hooks to process
 	 */
-    function checkUpload($hookName, $params) {
-        $form = $params[0];
-        $request = Application::get()->getRequest();
-        $context = $request->getContext();
-        $contextId = $context->getId();
-        $userVars = $request->getUserVars();
-        $fileName = $userVars['name'] ?? null;
+	function checkUpload($hookName, $params) {
+		$form = $params[0];
+		$request = Application::get()->getRequest();
+		$context = $request->getContext();
+		$contextId = $context->getId();
+		$userVars = $request->getUserVars();
+		$fileName = $userVars['name'] ?? null;
 		if (!$fileName) {
 			return false;
 		}
 
-        $allowedExtensions = $this->getSetting($contextId, 'allowedExtensions');
+		$allowedExtensions = $this->getSetting($contextId, 'allowedExtensions');
 
-        if ($allowedExtensions){
+		if ($allowedExtensions){
 			// Get the uploaded file path from $_FILES
 			$filePath = null;
 			if (isset($_FILES['file']) && isset($_FILES['file']['tmp_name'])) {
 				$filePath = $_FILES['file']['tmp_name'];
 			}
 
-            $validation = $this->validateFileType($fileName, $filePath, $allowedExtensions, $contextId);
-            if (!$validation['valid']) {
-                $form->addError('allowedFileType', $validation['error']);
-            }
-        }
-        return false;
-    }
+			$validation = $this->validateFileType($fileName, $filePath, $allowedExtensions, $contextId);
+			if (!$validation['valid']) {
+				$form->addError('allowedFileType', $validation['error']);
+			}
+		}
+		return false;
+	}
 
 }
 ?>
