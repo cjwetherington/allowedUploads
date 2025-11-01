@@ -69,6 +69,7 @@ class AllowedUploadsSettingsForm extends Form {
 
 	/**
 	 * Save settings.
+	 * @return bool True if settings saved successfully, false on validation error
 	 */
 	function execute(...$functionArgs) {
 		// Check if MIME validation is being enabled

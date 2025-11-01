@@ -22,6 +22,14 @@
 	<div id="description">{translate key="plugins.generic.allowedUploads.manager.settings.description"}</div>
 
 	{fbvFormArea id="allowedUploadsSettingsFormArea"}
+		{if $errors}
+			<div class="pkp_form_error">
+				{foreach from=$errors item=error}
+					<p>{$error}</p>
+				{/foreach}
+			</div>
+		{/if}
+
 		{fbvFormSection}
 			{fbvElement type="text" id="allowedExtensions" name="allowedExtensions" value=$allowedExtensions label="plugins.generic.allowedUploads.manager.settings.allowedExtensions"}
 		{/fbvFormSection}
@@ -33,13 +41,6 @@
 			{fbvElement type="checkbox" id="allowEmptyFiles" name="allowEmptyFiles" checked=$allowEmptyFiles label="plugins.generic.allowedUploads.manager.settings.allowEmptyFiles"}
 			<div class="sub_label">{translate key="plugins.generic.allowedUploads.manager.settings.allowEmptyFiles.description"}</div>
 		{/fbvFormSection}
-		{if $errors}
-			<div class="pkp_form_error">
-					{foreach from=$errors item=error}
-							<p>{$error}</p>
-					{/foreach}
-			</div>
-	{/if}
 	{/fbvFormArea}
 
 	{fbvFormButtons}
