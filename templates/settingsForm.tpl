@@ -27,7 +27,19 @@
 		{/fbvFormSection}
 		{fbvFormSection list=true}
 			{fbvElement type="checkbox" id="validateMimeType" name="validateMimeType" checked=$validateMimeType label="plugins.generic.allowedUploads.manager.settings.validateMimeType"}
+			<div class="sub_label">{translate key="plugins.generic.allowedUploads.manager.settings.validateMimeType.description"}</div>
 		{/fbvFormSection}
+		{fbvFormSection list=true}
+			{fbvElement type="checkbox" id="allowEmptyFiles" name="allowEmptyFiles" checked=$allowEmptyFiles label="plugins.generic.allowedUploads.manager.settings.allowEmptyFiles"}
+			<div class="sub_label">{translate key="plugins.generic.allowedUploads.manager.settings.allowEmptyFiles.description"}</div>
+		{/fbvFormSection}
+		{if $errors}
+			<div class="pkp_form_error">
+					{foreach from=$errors item=error}
+							<p>{$error}</p>
+					{/foreach}
+			</div>
+    {/if}
 	{/fbvFormArea}
 
 	{fbvFormButtons}

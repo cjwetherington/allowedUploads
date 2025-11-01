@@ -46,6 +46,7 @@ class AllowedUploadsSettingsForm extends Form {
 		$this->_data = array(
 			'allowedExtensions' => $this->_plugin->getSetting($this->_contextId, 'allowedExtensions'),
 			'validateMimeType' => $this->_plugin->getSetting($this->_contextId, 'validateMimeType'),
+			'allowEmptyFiles' => $this->_plugin->getSetting($this->_contextId, 'allowEmptyFiles')
 		);
 	}
 
@@ -53,7 +54,7 @@ class AllowedUploadsSettingsForm extends Form {
 	 * Assign form data to user-submitted data.
 	 */
 	function readInputData() {
-		$this->readUserVars(array('allowedExtensions', 'validateMimeType'));
+		$this->readUserVars(array('allowedExtensions', 'validateMimeType', 'allowEmptyFiles'));
 	}
 
 	/**
@@ -76,11 +77,15 @@ class AllowedUploadsSettingsForm extends Form {
 		if ($validateMimeType && !$this->testMimeDetection()) {
 			// MIME detection isn't working - add an error
 			$this->addError('validateMimeType', __('plugins.generic.allowedUploads.settings.mimeValidation.unavailable'));
+
+			// Also force the validateMimeType setting back to false so the form shows correctly
+			$this->setData('validateMimeType', false);
 			return false;
     	}
 
 		$this->_plugin->updateSetting($this->_contextId, 'allowedExtensions', $this->getData('allowedExtensions'), 'string');
 		$this->_plugin->updateSetting($this->_contextId, 'validateMimeType', $this->getData('validateMimeType'), 'bool');
+		$this->_plugin->updateSetting($this->_contextId, 'allowEmptyFiles', $this->getData('allowEmptyFiles'), 'bool');
 		return parent::execute(...$functionArgs);
 	}
 
@@ -89,7 +94,7 @@ class AllowedUploadsSettingsForm extends Form {
 	 * @return bool True if MIME detection works
 	 */
 	private function testMimeDetection() {
-		// Test with this PHP file - we know it exists and is readable
+		// Test with this file
 		$testFile = __FILE__;
 
 		// Test finfo_open (primary method)

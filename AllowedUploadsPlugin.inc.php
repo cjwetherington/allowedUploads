@@ -94,9 +94,12 @@ class AllowedUploadsPlugin extends GenericPlugin {
 				if ($request->getUserVar('save')) {
 					$form->readInputData();
 					if ($form->validate()) {
-						$form->execute();
-						return new JSONMessage(true);
+						$executeResult = $form->execute();
+						if ($executeResult !== false) {
+							return new JSONMessage(true);
+						}
 					}
+					return new JSONMessage(true, $form->fetch($request));
 				} else {
 					$form->initData();
 				}
@@ -253,6 +256,15 @@ class AllowedUploadsPlugin extends GenericPlugin {
 			];
 		}
 
+		// Check for empty files (if we have a file path and empty files are disallowed)
+		$allowEmptyFiles = $this->getSetting($contextId, 'allowEmptyFiles') ?? true;
+		if (!$allowEmptyFiles && $filePath && file_exists($filePath) && filesize($filePath) === 0) {
+			return [
+				'valid' => false,
+				'error' => __('plugins.generic.allowedUploads.error.emptyFile', ['fileName' => $fileName])
+			];
+		}
+
         // Check for multiple extensions
         if (count($parts) > 2) {
             // Check if a double extension is explicitly allowed
@@ -290,6 +302,11 @@ class AllowedUploadsPlugin extends GenericPlugin {
             error_log("AllowedUploads: Could not determine MIME type of file " . $fileName);
             return ['valid' => true, 'error' => null];
         }
+
+		// Allow empty MIME types to pass (handled separately above)
+		if ($detectedMimeType === 'application/x-empty' || $detectedMimeType === 'inode/x-empty') {
+			return ['valid' => true, 'error' => null];
+		}
 
         $expectedMimeTypes = $this->getExpectedMimeTypes($extension);
         if (!empty($expectedMimeTypes) && !in_array($detectedMimeType, $expectedMimeTypes)) {

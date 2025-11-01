@@ -25,3 +25,30 @@ msgstr "أضف قائمة بامتدادات الملفات المسموح له�
 
 msgid "plugins.generic.allowedUploads.manager.settings.allowedExtensions"
 msgstr "امتدادات الملفات المسموحة"
+
+msgid "plugins.generic.allowedUploads.manager.settings.validateMimeType"
+msgstr "تمكين التحقق من صحة نوع MIME لتحسين الأمان"
+
+msgid "plugins.generic.allowedUploads.manager.settings.validateMimeType.description"
+msgstr "التحقق من وجود ملفات تتنكر في شكل أنواع أخرى، مثل البرامج الضارة المتنكرة في شكل صورة"
+
+msgid "plugins.generic.allowedUploads.error.noExtension"
+msgstr "{$fileName}: لا يسمح بالملفات التي لا تحتوي على امتدادات ملفات"
+
+msgid "plugins.generic.allowedUploads.error.multiExtension"
+msgstr "{$fileName}: لا يسمح بالملفات ذات امتدادات الملفات المتعددة"
+
+msgid "plugins.generic.allowedUploads.error.mimeType"
+msgstr "تم اكتشاف عدم تطابق نوع الملف: '{$fileName}' لديه نوع MIME غير متوقع '{$detectedType}' وقد يشكل خطرا أمنيا!"
+
+msgid "plugins.generic.allowedUploads.settings.mimeValidation.unavailable"
+msgstr "لا يمكن تمكين التحقق من صحة نوع MIME! لا يعمل اكتشاف MIME الخاص بالخادم بشكل صحيح. يرجى التحقق من تكوين PHP وإعداد mime_database_path في تكوين OJS الخاص بك."
+
+msgid "plugins.generic.allowedUploads.error.emptyFile"
+msgstr "الملفات الفارغة غير مسموح بها"
+
+msgid "plugins.generic.allowedUploads.manager.settings.allowEmptyFiles"
+msgstr "السماح بالملفات الفارغة"
+
+msgid "plugins.generic.allowedUploads.manager.settings.allowEmptyFiles.description"
+msgstr "ضع علامة في هذا المربع للسماح بتحميل الملفات الفارغة (0 بايت)"

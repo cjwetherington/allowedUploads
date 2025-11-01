@@ -25,3 +25,30 @@ msgstr "Fügen Sie eine durch Strichpunkte getrennte Liste der erlaubten Dateier
 
 msgid "plugins.generic.allowedUploads.manager.settings.allowedExtensions"
 msgstr "Erlaubte Dateierweiterungen"
+
+msgid "plugins.generic.allowedUploads.manager.settings.validateMimeType"
+msgstr "Aktivieren der MIME-Typvalidierung für erhöhte Sicherheit"
+
+msgid "plugins.generic.allowedUploads.manager.settings.validateMimeType.description"
+msgstr "Suchen Sie nach Dateien, die sich als andere Typen ausgeben, z.B. Malware, die als Bild getarnt ist"
+
+msgid "plugins.generic.allowedUploads.error.noExtension"
+msgstr "{$fileName}: Dateien ohne Dateiendung sind nicht zulässig."
+
+msgid "plugins.generic.allowedUploads.error.multiExtension"
+msgstr "{$fileName}: Dateien mit mehreren Dateierweiterungen sind nicht zulässig."
+
+msgid "plugins.generic.allowedUploads.error.mimeType"
+msgstr "Dateityp-Diskrepanz erkannt: '{$fileName}' hat einen unerwarteten MIME-Typ '{$detectedType}' und kann ein Sicherheitsrisiko darstellen!"
+
+msgid "plugins.generic.allowedUploads.settings.mimeValidation.unavailable"
+msgstr "Die MIME-Typ-Validierung kann nicht aktiviert werden! Die MIME-Erkennung des Servers funktioniert nicht ordnungsgemäß. Bitte überprüfen Sie Ihre PHP-Konfiguration und die mime_database_path Einstellung in Ihrer OJS-Konfiguration."
+
+msgid "plugins.generic.allowedUploads.error.emptyFile"
+msgstr "Leere Dateien sind nicht zulässig: {$fileName}"
+
+msgid "plugins.generic.allowedUploads.manager.settings.allowEmptyFiles"
+msgstr "Leere Dateien zulassen"
+
+msgid "plugins.generic.allowedUploads.manager.settings.allowEmptyFiles.description"
+msgstr "Aktivieren Sie dieses Kontrollkästchen, um das Hochladen leerer Dateien (0-Byte) zuzulassen"

@@ -25,3 +25,30 @@ msgstr "Agregue una lista de las extensiones permitidas separadas por punto y co
 
 msgid "plugins.generic.allowedUploads.manager.settings.allowedExtensions"
 msgstr "Extensiones de archivo permitidas"
+
+msgid "plugins.generic.allowedUploads.manager.settings.validateMimeType"
+msgstr "Habilite la validación de tipo MIME para mejorar la seguridad"
+
+msgid "plugins.generic.allowedUploads.manager.settings.validateMimeType.description"
+msgstr "Comprueba si hay archivos disfrazados de otros tipos, como malware disfrazado de imagen"
+
+msgid "plugins.generic.allowedUploads.error.noExtension"
+msgstr "{$fileName}: No se permiten archivos sin extensiones de archivo."
+
+msgid "plugins.generic.allowedUploads.error.multiExtension"
+msgstr "{$fileName}: No se permiten archivos con varias extensiones de archivo."
+
+msgid "plugins.generic.allowedUploads.error.mimeType"
+msgstr "Se detectó una falta de coincidencia en el tipo de archivo: '{$fileName}' tiene un tipo MIME inesperado '{$detectedType}' y puede suponer un riesgo para la seguridad."
+
+msgid "plugins.generic.allowedUploads.settings.mimeValidation.unavailable"
+msgstr "¡No se puede habilitar la validación de tipo MIME! La detección MIME del servidor no funciona correctamente. Por favor, comprueba tu configuración de PHP y la configuración de mime_database_path en tu configuración de OJS."
+
+msgid "plugins.generic.allowedUploads.error.emptyFile"
+msgstr "No se permiten archivos vacíos: {$fileName}"
+
+msgid "plugins.generic.allowedUploads.manager.settings.allowEmptyFiles"
+msgstr "Permitir archivos vacíos"
+
+msgid "plugins.generic.allowedUploads.manager.settings.allowEmptyFiles.description"
+msgstr "Marque esta casilla para permitir que se carguen archivos vacíos (0 bytes)"

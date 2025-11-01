@@ -25,3 +25,30 @@ msgstr "Lisää puolipisteellä erotettu lista sallituista tiedostomuodoista. Es
 
 msgid "plugins.generic.allowedUploads.manager.settings.allowedExtensions"
 msgstr "Sallitut tiedostomuodot"
+
+msgid "plugins.generic.allowedUploads.manager.settings.validateMimeType"
+msgstr "Ota MIME-tyypin vahvistus käyttöön turvallisuuden parantamiseksi"
+
+msgid "plugins.generic.allowedUploads.manager.settings.validateMimeType.description"
+msgstr "Tarkista, onko tiedostoja, jotka naamioituvat muuntyyppisiksi tiedostoiksi, kuten kuvaksi naamioituja haittaohjelmia"
+
+msgid "plugins.generic.allowedUploads.error.noExtension"
+msgstr "{$fileName}: Tiedostot, joissa ei ole tiedostotunnisteita, eivät ole sallittuja."
+
+msgid "plugins.generic.allowedUploads.error.multiExtension"
+msgstr "{$fileName}: Tiedostot, joilla on useita tiedostotunnisteita, eivät ole sallittuja."
+
+msgid "plugins.generic.allowedUploads.error.mimeType"
+msgstr "Tiedostotyypin ristiriita havaittu: {$fileName}' on odottamaton MIME-tyyppi {$detectedType} ja se voi aiheuttaa tietoturvariskin!"
+
+msgid "plugins.generic.allowedUploads.settings.mimeValidation.unavailable"
+msgstr "MIME-tyypin vahvistusta ei voi ottaa käyttöön! Palvelimen MIME-tunnistus ei toimi oikein. Tarkista PHP-kokoonpanosi ja mime_database_path-asetus OJS-määrityksistäsi."
+
+msgid "plugins.generic.allowedUploads.error.emptyFile"
+msgstr "Tyhjät tiedostot eivät ole sallittuja: {$fileName}"
+
+msgid "plugins.generic.allowedUploads.manager.settings.allowEmptyFiles"
+msgstr "Salli tyhjät tiedostot"
+
+msgid "plugins.generic.allowedUploads.manager.settings.allowEmptyFiles.description"
+msgstr "Valitse tämä ruutu, jos haluat sallia tyhjien (0-tavuisten) tiedostojen lataamisen"
